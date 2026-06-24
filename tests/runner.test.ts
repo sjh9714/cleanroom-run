@@ -34,6 +34,8 @@ describe("runCleanroom", () => {
     expect(report.exitCode).toBe(0);
     expect(report.generatedUntrackedFiles).toEqual([]);
     expect(report.markdownReportPath && existsSync(report.markdownReportPath)).toBe(true);
+    expect(report.markdownReportPath?.startsWith(root)).toBe(false);
+    expect(existsSync(join(root, ".cleanroom-run"))).toBe(false);
     expect(existsSync(report.worktreePath)).toBe(false);
   });
 
@@ -83,4 +85,3 @@ describe("runCleanroom", () => {
     expect(existsSync(join(root, "new-input.txt"))).toBe(true);
   });
 });
-

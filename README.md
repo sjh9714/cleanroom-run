@@ -16,7 +16,7 @@ Exit: 0
 Duration: 3.21s
 Generated untracked files: 1
 Modified tracked files: 0
-Report: /repo/.cleanroom-run/reports/2026-06-25T12-00-00-000Z-inline.md
+Report: /tmp/cleanroom-run-reports/2026-06-25T12-00-00-000Z-inline.md
 
 Generated files:
   + generated/schema.json
@@ -55,7 +55,7 @@ For a faster command that does not need dependency install:
 npx cleanroom-run run -- npm test
 ```
 
-Cleanroom Run writes Markdown reports to `.cleanroom-run/reports/` and exits non-zero when:
+Cleanroom Run writes Markdown reports to your OS temp directory by default and exits non-zero when:
 
 - the command exits non-zero
 - the command times out
@@ -127,6 +127,12 @@ Emit JSON for automation:
 cleanroom-run run --json -- sh -lc "npm ci && npm test"
 ```
 
+Keep Markdown reports inside the repo:
+
+```bash
+cleanroom-run run --report-dir .cleanroom-run/reports -- sh -lc "npm ci && npm test"
+```
+
 Check whether the repo is ready:
 
 ```bash
@@ -167,7 +173,7 @@ jobs:
 6. Reports command output, exit status, generated untracked files, and tracked files changed during the command.
 7. Removes the temporary worktree unless `--keep` is set.
 
-Your original working tree is not cleaned, reset, or modified.
+Your original working tree is not cleaned, reset, or modified by default. Passing `--report-dir` with a repo-relative path intentionally writes the report there.
 
 ## Example Failure
 
@@ -194,4 +200,3 @@ Cleanroom Run reports the generated file and exits with status 1 even though the
 - First-class `cleanroom-run action` wrapper for GitHub Actions summaries.
 - Optional Docker backend for stronger isolation.
 - Policy mode for max generated files, changed-file allowlists, and required report artifacts.
-

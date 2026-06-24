@@ -14,6 +14,7 @@ None known.
 
 - npm package publication has not been performed. The package is ready for npm, and the README includes a working GitHub install command for the release candidate.
 - Future report formats such as JUnit and SARIF are documented as roadmap items, not v0.1 requirements.
+- Default Markdown reports now write to the OS temp directory so `cleanroom-run run` does not modify the user's repo unless `--report-dir` is explicit.
 
 ## Verification Log
 
@@ -34,6 +35,13 @@ None known.
 - `npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run --version` exited 0 and printed `0.1.0`.
 - `node dist/index.js run --json -- sh -lc "npm ci && npm test"` exited 0 inside a temporary clean Git worktree.
 - GitHub Actions run `28123679762` completed with conclusion `success`.
+- Continuation audit patch:
+  - `npm run lint` exited 0.
+  - `npm run typecheck` exited 0.
+  - `npm test` exited 0 with 8 tests passing.
+  - `npm run build` exited 0.
+  - `npm run test:smoke` exited 0.
+  - A fresh temporary repo check confirmed default Markdown reports are written under the OS temp directory and no `.cleanroom-run` directory is created in the checked repo by default.
 
 ## Launch Surface
 

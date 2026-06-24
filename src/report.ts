@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { isAbsolute, join } from "node:path";
 import type { DoctorResult, RunReport } from "./types.js";
 
 const TAIL_LIMIT = 8000;
@@ -55,7 +56,12 @@ export function formatDoctor(result: DoctorResult): string {
 }
 
 export async function writeMarkdownReport(repoRoot: string, reportDir: string | undefined, report: RunReport): Promise<string> {
-  const outputDir = reportDir ? join(repoRoot, reportDir) : join(repoRoot, ".cleanroom-run", "reports");
+  const outputDir =
+    reportDir === undefined
+      ? join(tmpdir(), "cleanroom-run-reports")
+      : isAbsolute(reportDir)
+        ? reportDir
+        : join(repoRoot, reportDir);
   await mkdir(outputDir, { recursive: true });
   const slug = (report.checkName ?? "inline").replace(/[^A-Za-z0-9_.-]+/g, "-");
   const fileName = `${report.startedAt.replace(/[:.]/g, "-")}-${slug}.md`;
@@ -122,4 +128,3 @@ function indent(value: string, prefix: string): string {
     .map((line) => `${prefix}${line}`)
     .join("\n");
 }
-

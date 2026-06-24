@@ -38,3 +38,5 @@
   - Self cleanroom run `node dist/index.js run --json -- sh -lc "npm ci && npm test"` succeeded.
   - Remote GitHub Actions run `28123679762` succeeded.
 - Confirmed remote repo is public: https://github.com/sjh9714/cleanroom-run
+- Continuation audit found a README/product mismatch: default reports were written into the user's repo while README promised the working tree is not modified.
+- Changed default report output to the OS temp directory; repo-relative report output now requires explicit `--report-dir`.
