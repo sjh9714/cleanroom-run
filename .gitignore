@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+.cleanroom-run/reports/
+*.tgz
+.DS_Store
+

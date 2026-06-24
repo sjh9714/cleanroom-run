@@ -1,0 +1,60 @@
+{
+  "name": "cleanroom-run",
+  "version": "0.1.0",
+  "description": "Run repo checks in a clean Git worktree before CI catches dirty-local-state bugs.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Sung Jin Han",
+  "homepage": "https://github.com/sjh9714/cleanroom-run#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjh9714/cleanroom-run.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sjh9714/cleanroom-run/issues"
+  },
+  "keywords": [
+    "git",
+    "ci",
+    "cleanroom",
+    "worktree",
+    "testing",
+    "ai-agents",
+    "devtools",
+    "cli"
+  ],
+  "bin": {
+    "cleanroom-run": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:smoke",
+    "prepack": "npm run build",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^22.19.1",
+    "eslint": "^9.39.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^4.0.15"
+  }
+}

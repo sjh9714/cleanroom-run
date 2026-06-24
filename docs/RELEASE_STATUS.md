@@ -2,19 +2,22 @@
 
 ## Current State
 
-Status: research and project selection in progress.
+Status: v0.1 implementation checkpoint complete; launch blocker audit still pending.
+
+Remote repository: https://github.com/sjh9714/cleanroom-run
 
 ## Launch Blockers
 
-- No implementation yet.
-- No package metadata yet.
-- No tests yet.
-- No CI yet.
-- No license yet.
-- No README launch page yet.
-- No remote GitHub repository yet.
+- Full final verification has not been run after the latest docs/status edits.
+- `npm pack --dry-run` has not been verified yet.
+- GitHub Actions has not run on the implementation commit yet.
+- Launch blocker audit still pending.
 
 ## Verification Log
 
-- Pending.
-
+- `npm install` exited 0.
+- `npm run typecheck` exited 0.
+- `npm test` exited 0 with 8 tests passing.
+- `npm run lint` exited 0 after ESLint Node globals fix.
+- `npm run build` exited 0.
+- `npm run test:smoke` exited 0.
