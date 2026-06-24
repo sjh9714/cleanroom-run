@@ -30,3 +30,11 @@
   - `npm run lint` succeeded after Node globals config fix.
   - `npm run build` succeeded.
   - `npm run test:smoke` succeeded.
+- Ran launch blocker audit:
+  - `npm run verify` succeeded.
+  - `npm pack --dry-run` succeeded.
+  - `node dist/index.js doctor --json` succeeded.
+  - GitHub release-candidate install via `npm exec --package github:sjh9714/cleanroom-run` succeeded.
+  - Self cleanroom run `node dist/index.js run --json -- sh -lc "npm ci && npm test"` succeeded.
+  - Remote GitHub Actions run `28123679762` succeeded.
+- Confirmed remote repo is public: https://github.com/sjh9714/cleanroom-run
