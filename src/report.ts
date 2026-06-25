@@ -18,7 +18,7 @@ export function formatTerminalReport(report: RunReport): string {
     report.ok ? "Cleanroom check passed" : "Cleanroom check failed",
     "",
     `Command: ${report.command}`,
-    `Exit: ${report.exitCode ?? "signal"}${report.signal ? ` (${report.signal})` : ""}`,
+    `Exit: ${formatExit(report)}`,
     `Duration: ${formatDuration(report.durationMs)}`,
     `Input untracked files: ${report.inputUntrackedFiles.length}`,
     `Generated untracked files: ${report.generatedUntrackedFiles.length}`,
@@ -47,6 +47,16 @@ export function formatTerminalReport(report: RunReport): string {
   }
 
   return `${lines.join("\n")}\n`;
+}
+
+function formatExit(report: RunReport): string {
+  if (report.exitCode !== null) {
+    return String(report.exitCode);
+  }
+  if (report.signal !== null) {
+    return `signal (${report.signal})`;
+  }
+  return "not run";
 }
 
 export function formatDoctor(result: DoctorResult): string {

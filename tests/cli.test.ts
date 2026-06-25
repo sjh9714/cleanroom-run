@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { resolvePolicy } from "../src/cli.js";
+import { resolvePolicy, validateCliPolicyFlags } from "../src/cli.js";
 
 describe("resolvePolicy", () => {
+  it("rejects direct CLI strict and includeUntracked flags together", () => {
+    expect(() => validateCliPolicyFlags(new Set(["--strict", "--include-untracked"]))).toThrow(
+      "`--strict` cannot be combined with `--include-untracked`"
+    );
+  });
+
   it("lets includeUntracked override config strict mode", () => {
     expect(resolvePolicy({ strict: true }, new Set(["--include-untracked"]))).toEqual({
       strict: false,

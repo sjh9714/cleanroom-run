@@ -34,6 +34,24 @@ describe("report formatting", () => {
     expect(output).toContain("generated.txt");
   });
 
+  it("formats strict preflight failures as not run", () => {
+    const output = formatTerminalReport({
+      ...baseReport,
+      exitCode: null,
+      signal: null,
+      durationMs: 0,
+      inputUntrackedFiles: ["local.env"],
+      generatedUntrackedFiles: [],
+      modifiedTrackedFiles: [],
+      failureReasons: ["input-untracked-files"],
+      stdoutTail: "",
+      stderrTail: ""
+    });
+
+    expect(output).toContain("Exit: not run");
+    expect(output).not.toContain("Exit: signal");
+  });
+
   it("formats markdown reports", () => {
     const output = formatMarkdownReport(baseReport);
     expect(output).toContain("# Cleanroom Run Report");

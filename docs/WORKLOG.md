@@ -74,3 +74,15 @@
 - npm publish remains blocked by npm auth:
   - `npm whoami` returned `E401 Unauthorized`.
   - Blocked command: `npm publish --access public`.
+- Started P0 launch fix pass from external review.
+- Implemented:
+  - direct CLI rejection for `--strict --include-untracked`
+  - `Exit: not run` for strict preflight failures
+  - README hero/install commands that work before npm publication
+  - version bump to `0.1.1`
+- Verification:
+  - `npm test -- tests/cli.test.ts tests/report.test.ts` exited 0 with 6 tests passing.
+  - `npm run typecheck && npm run typecheck:test` exited 0.
+  - `npm run verify` exited 0 with 19 tests passing.
+  - `npm pack --dry-run` exited 0 for `cleanroom-run@0.1.1`.
+  - `npm whoami` still returned `E401 Unauthorized`; blocked command remains `npm publish --access public`.

@@ -18,7 +18,7 @@ export async function main(args: string[]): Promise<void> {
   }
 
   if (command === "--version" || command === "-v") {
-    console.log("0.1.0");
+    console.log("0.1.1");
     return;
   }
 
@@ -111,6 +111,7 @@ async function runCommand(args: string[]): Promise<void> {
   const beforeSeparator = separator === -1 ? args : args.slice(0, separator);
   const afterSeparator = separator === -1 ? [] : args.slice(separator + 1);
   const parsed = parseFlags(beforeSeparator, ["--json", "--keep", "--strict", "--include-untracked", "--allow-modified-tracked"]);
+  validateCliPolicyFlags(parsed.booleans);
   const checkName = parsed.positionals[0];
   const root = await repoRoot(process.cwd());
   const config = await loadConfig(root, parsed.flags.get("--config"));
@@ -238,4 +239,11 @@ export function resolvePolicy(
     includeUntracked: requestedStrict ? false : requestedIncludeUntracked ? true : (check.includeUntracked ?? false),
     allowModifiedTracked: booleans.has("--allow-modified-tracked") ? true : (check.allowModifiedTracked ?? false)
   };
+}
+
+export function validateCliPolicyFlags(booleans: Set<string>): void {
+  assertCleanroom(
+    !(booleans.has("--strict") && booleans.has("--include-untracked")),
+    "`--strict` cannot be combined with `--include-untracked`"
+  );
 }

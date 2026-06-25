@@ -2,7 +2,7 @@
 
 ## Current State
 
-Status: v0.1 release candidate ready.
+Status: v0.1.1 release candidate locally verified; GitHub release pending after push.
 
 Remote repository: https://github.com/sjh9714/cleanroom-run
 GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.0
@@ -72,6 +72,22 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
   - Repository description is `Catch dirty-local-state bugs in AI-generated code before CI does.`
   - Repository topics include `ai-agents`, `coding-agents`, `codex`, `ci`, `testing`, `git`, `worktree`, `developer-tools`, `cli`, `npm`, `typescript`, `cleanroom`, `pre-ci`, `automation`, and `codegen`.
   - Launch issues #1 through #6 are open.
+- P0 launch fix verification:
+  - Added tests for direct `--strict --include-untracked` rejection.
+  - Added tests for strict preflight terminal output showing `Exit: not run`.
+  - Bumped local package version to `0.1.1`.
+  - README hero now uses the GitHub install command while npm is unpublished.
+  - `npm test -- tests/cli.test.ts tests/report.test.ts` exited 0 with 6 tests passing.
+  - `npm run typecheck && npm run typecheck:test` exited 0.
+  - `npm run verify` exited 0:
+    - lint passed
+    - production typecheck passed
+    - test typecheck passed
+    - 19 tests passed
+    - build passed
+    - smoke test passed
+  - `npm pack --dry-run` exited 0 and produced `cleanroom-run-0.1.1.tgz` metadata with 40 packaged files.
+  - `npm whoami` returned `E401 Unauthorized`; npm publish is still blocked by authentication.
 
 ## Launch Surface
 
