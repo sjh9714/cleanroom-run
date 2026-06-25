@@ -86,3 +86,7 @@
   - `npm run verify` exited 0 with 19 tests passing.
   - `npm pack --dry-run` exited 0 for `cleanroom-run@0.1.1`.
   - `npm whoami` still returned `E401 Unauthorized`; blocked command remains `npm publish --access public`.
+- Pushed P0 launch fix commit `0aec0be`.
+- Confirmed remote CI for `0aec0be` succeeded: https://github.com/sjh9714/cleanroom-run/actions/runs/28145426387
+- Verified GitHub install path prints `0.1.1`.
+- Created GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1

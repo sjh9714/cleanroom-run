@@ -2,10 +2,10 @@
 
 ## Current State
 
-Status: v0.1.1 release candidate locally verified; GitHub release pending after push.
+Status: v0.1.1 released on GitHub; npm publication remains blocked by authentication.
 
 Remote repository: https://github.com/sjh9714/cleanroom-run
-GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.0
+Latest GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1
 
 ## Launch Blockers
 
@@ -21,10 +21,9 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
 
 ## Non-Blocking Follow-Ups
 
-- npm package publication has not been performed because npm auth is unavailable. The package is ready for npm, and the README includes a working GitHub install command for the release candidate.
+- npm package publication has not been performed because npm auth is unavailable. The package is ready for npm, and the README includes a working GitHub install command for the current GitHub release.
 - Future report formats such as JUnit and SARIF are documented as roadmap items, not v0.1 requirements.
 - Default Markdown reports now write to the OS temp directory so `cleanroom-run run` does not modify the user's repo unless `--report-dir` is explicit.
-- npm auth was previously unavailable (`npm whoami` returned E401). The final launch pass will retry and either publish or record the blocked publish command.
 
 ## Verification Log
 
@@ -88,6 +87,9 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
     - smoke test passed
   - `npm pack --dry-run` exited 0 and produced `cleanroom-run-0.1.1.tgz` metadata with 40 packaged files.
   - `npm whoami` returned `E401 Unauthorized`; npm publish is still blocked by authentication.
+  - `npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run --version` exited 0 and printed `0.1.1`.
+  - GitHub Actions run `28145426387` completed with conclusion `success` for commit `0aec0be`.
+  - GitHub release `v0.1.1` is published and not a draft/prerelease: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1
 
 ## Launch Surface
 
@@ -107,6 +109,6 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
 - Changelog/release notes: complete.
 - Public GitHub repository: complete and pushed.
 - GitHub topics/description: complete.
-- GitHub release: complete.
+- GitHub releases: complete for `v0.1.0` and `v0.1.1`.
 - Launch issues: complete.
 - npm publish: blocked by authentication; exact blocked command recorded above.
