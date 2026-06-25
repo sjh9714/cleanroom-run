@@ -1,7 +1,7 @@
 {
   "name": "cleanroom-run",
   "version": "0.1.0",
-  "description": "Run repo checks in a clean Git worktree before CI catches dirty-local-state bugs.",
+  "description": "Catch dirty-local-state bugs in AI-generated code before CI does.",
   "type": "module",
   "license": "MIT",
   "author": "Sung Jin Han",
@@ -39,9 +39,10 @@
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json",
     "test": "vitest run",
     "test:smoke": "node scripts/smoke-test.mjs",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:smoke",
+    "verify": "npm run lint && npm run typecheck && npm run typecheck:test && npm test && npm run build && npm run test:smoke",
     "prepack": "npm run build",
     "prepare": "npm run build"
   },

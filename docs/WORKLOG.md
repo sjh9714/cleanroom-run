@@ -40,3 +40,20 @@
 - Confirmed remote repo is public: https://github.com/sjh9714/cleanroom-run
 - Continuation audit found a README/product mismatch: default reports were written into the user's repo while README promised the working tree is not modified.
 - Changed default report output to the OS temp directory; repo-relative report output now requires explicit `--report-dir`.
+- Started star-ready launch hardening pass from the attached positioning plan.
+- Implemented and tested:
+  - default tracked-only input policy
+  - `--include-untracked`
+  - `--strict`
+  - `--allow-modified-tracked`
+  - `inputUntrackedFiles` and `failureReasons` report fields
+  - tracked-file mutation failure by default
+  - Unix process-group cleanup for timed-out commands
+  - test TypeScript typecheck script
+  - Ubuntu/macOS and Node 20/22 CI matrix
+- Rewrote README top around "Command exited 0. The repo was still wrong."
+- Verification during implementation:
+  - targeted policy/process tests passed with 16 tests.
+  - `npm run typecheck:test` exited 0.
+  - `npm test` exited 0 with 17 tests passing.
+  - `npm run lint` exited 0.

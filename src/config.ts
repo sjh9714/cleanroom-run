@@ -11,7 +11,8 @@ const defaultConfig: CleanroomConfig = {
   checks: {
     verify: {
       command: "npm run verify",
-      timeoutMs: 120000
+      timeoutMs: 120000,
+      strict: true
     }
   }
 };
@@ -67,13 +68,32 @@ export function normalizeConfig(value: unknown, source = DEFAULT_CONFIG_NAME): C
       throw new CleanroomError(`${source} check "${name}" timeoutMs must be a positive integer`);
     }
 
+    const strict = readOptionalBoolean(rawCheck, "strict", source, name);
+    const includeUntracked = readOptionalBoolean(rawCheck, "includeUntracked", source, name);
+    const allowModifiedTracked = readOptionalBoolean(rawCheck, "allowModifiedTracked", source, name);
+    if (strict === true && includeUntracked === true) {
+      throw new CleanroomError(`${source} check "${name}" cannot combine strict and includeUntracked`);
+    }
+
     checks[name] = {
       command,
-      timeoutMs: timeoutMs === undefined ? undefined : Number(timeoutMs)
+      timeoutMs: timeoutMs === undefined ? undefined : Number(timeoutMs),
+      strict,
+      includeUntracked,
+      allowModifiedTracked
     };
   }
 
   return { checks };
+}
+
+function readOptionalBoolean(rawCheck: object, field: string, source: string, name: string): boolean | undefined {
+  const value = (rawCheck as Record<string, unknown>)[field];
+  if (value !== undefined && typeof value !== "boolean") {
+    throw new CleanroomError(`${source} check "${name}" ${field} must be a boolean`);
+  }
+
+  return value;
 }
 
 export async function writeDefaultConfig(repoRoot: string, force: boolean): Promise<string> {
@@ -86,4 +106,3 @@ export async function writeDefaultConfig(repoRoot: string, force: boolean): Prom
   await writeFile(path, body, "utf8");
   return path;
 }
-

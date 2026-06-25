@@ -28,16 +28,19 @@ export async function runProcess(command: CommandSpec, cwd: string, timeoutMs: n
   }
 
   return new Promise((resolve, reject) => {
+    const detached = process.platform !== "win32";
     const child =
       command.kind === "shell"
         ? spawn(command.command, {
             cwd,
+            detached,
             env: { ...process.env, CI: process.env.CI ?? "true" },
             shell: true,
             stdio: ["ignore", "pipe", "pipe"]
           })
         : spawn(command.argv[0]!, command.argv.slice(1), {
             cwd,
+            detached,
             env: { ...process.env, CI: process.env.CI ?? "true" },
             shell: false,
             stdio: ["ignore", "pipe", "pipe"]
@@ -49,11 +52,9 @@ export async function runProcess(command: CommandSpec, cwd: string, timeoutMs: n
 
     const timer = setTimeout(() => {
       timedOut = true;
-      child.kill("SIGTERM");
+      killProcessTree(child.pid, "SIGTERM");
       setTimeout(() => {
-        if (!child.killed) {
-          child.kill("SIGKILL");
-        }
+        killProcessTree(child.pid, "SIGKILL");
       }, 1000).unref();
     }, timeoutMs);
 
@@ -74,3 +75,23 @@ export async function runProcess(command: CommandSpec, cwd: string, timeoutMs: n
   });
 }
 
+function killProcessTree(pid: number | undefined, signal: NodeJS.Signals): void {
+  if (pid === undefined) {
+    return;
+  }
+
+  if (process.platform !== "win32") {
+    try {
+      process.kill(-pid, signal);
+      return;
+    } catch {
+      // Fall back to killing the direct child below.
+    }
+  }
+
+  try {
+    process.kill(pid, signal);
+  } catch {
+    // Process already exited.
+  }
+}

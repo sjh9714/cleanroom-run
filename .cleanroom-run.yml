@@ -2,4 +2,4 @@ checks:
   verify:
     command: npm ci && npm run verify
     timeoutMs: 180000
-
+    strict: true

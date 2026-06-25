@@ -35,7 +35,35 @@ export async function runCleanroom(cwd: string, options: RunOptions): Promise<Ru
     await applyPatch(worktreePath, patch);
 
     const inputUntracked = await untrackedFiles(root);
-    await copyUntrackedFiles(root, worktreePath, inputUntracked);
+    if (options.strict && inputUntracked.length > 0) {
+      const completed = new Date();
+      const report: RunReport = {
+        ok: false,
+        checkName: options.checkName,
+        command: options.command.display,
+        repoRoot: root,
+        worktreePath,
+        keptWorktree: options.keep,
+        exitCode: null,
+        signal: null,
+        timedOut: false,
+        durationMs: 0,
+        inputUntrackedFiles: inputUntracked,
+        generatedUntrackedFiles: [],
+        modifiedTrackedFiles: [],
+        failureReasons: ["input-untracked-files"],
+        stdoutTail: "",
+        stderrTail: "",
+        startedAt: started.toISOString(),
+        completedAt: completed.toISOString()
+      };
+      report.markdownReportPath = await writeMarkdownReport(root, options.reportDir, report);
+      return report;
+    }
+
+    if (options.includeUntracked) {
+      await copyUntrackedFiles(root, worktreePath, inputUntracked);
+    }
 
     const beforeTracked = await trackedFiles(worktreePath);
     const beforeHashes = await fileHashes(worktreePath, beforeTracked);
@@ -52,10 +80,16 @@ export async function runCleanroom(cwd: string, options: RunOptions): Promise<Ru
     const generatedUntrackedFiles = afterUntracked.filter((file) => !beforeUntracked.has(file)).sort();
     const modifiedTrackedFiles = changedHashes(beforeHashes, afterHashes);
     const completed = new Date();
-    const ok = processResult.exitCode === 0 && !processResult.timedOut && generatedUntrackedFiles.length === 0;
+    const failureReasons = buildFailureReasons({
+      exitCode: processResult.exitCode,
+      timedOut: processResult.timedOut,
+      generatedUntrackedFiles,
+      modifiedTrackedFiles,
+      allowModifiedTracked: options.allowModifiedTracked ?? false
+    });
 
     const report: RunReport = {
-      ok,
+      ok: failureReasons.length === 0,
       checkName: options.checkName,
       command: options.command.display,
       repoRoot: root,
@@ -65,8 +99,10 @@ export async function runCleanroom(cwd: string, options: RunOptions): Promise<Ru
       signal: processResult.signal,
       timedOut: processResult.timedOut,
       durationMs,
+      inputUntrackedFiles: inputUntracked,
       generatedUntrackedFiles,
       modifiedTrackedFiles,
+      failureReasons,
       stdoutTail: tail(processResult.stdout),
       stderrTail: tail(processResult.stderr),
       startedAt: started.toISOString(),
@@ -76,10 +112,34 @@ export async function runCleanroom(cwd: string, options: RunOptions): Promise<Ru
     report.markdownReportPath = await writeMarkdownReport(root, options.reportDir, report);
     return report;
   } finally {
-    if (!options.keep && worktreeAdded) {
-      await removeWorktree(root, worktreePath);
+    if (!options.keep) {
+      if (worktreeAdded) {
+        await removeWorktree(root, worktreePath);
+      }
       await rm(tempBase, { recursive: true, force: true });
     }
   }
 }
 
+function buildFailureReasons(input: {
+  exitCode: number | null;
+  timedOut: boolean;
+  generatedUntrackedFiles: string[];
+  modifiedTrackedFiles: string[];
+  allowModifiedTracked: boolean;
+}): string[] {
+  const reasons: string[] = [];
+  if (input.timedOut) {
+    reasons.push("timeout");
+  }
+  if (input.exitCode !== 0) {
+    reasons.push("command-failed");
+  }
+  if (input.generatedUntrackedFiles.length > 0) {
+    reasons.push("generated-untracked-files");
+  }
+  if (!input.allowModifiedTracked && input.modifiedTrackedFiles.length > 0) {
+    reasons.push("modified-tracked-files");
+  }
+  return reasons;
+}

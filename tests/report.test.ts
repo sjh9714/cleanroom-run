@@ -13,8 +13,10 @@ const baseReport: RunReport = {
   signal: null,
   timedOut: false,
   durationMs: 1500,
+  inputUntrackedFiles: ["local.env"],
   generatedUntrackedFiles: ["generated.txt"],
   modifiedTrackedFiles: ["src/index.ts"],
+  failureReasons: ["input-untracked-files", "modified-tracked-files"],
   stdoutTail: "ok",
   stderrTail: "",
   markdownReportPath: "/repo/.cleanroom-run/reports/report.md",
@@ -26,7 +28,9 @@ describe("report formatting", () => {
   it("formats terminal summaries with generated files", () => {
     const output = formatTerminalReport(baseReport);
     expect(output).toContain("Cleanroom check failed");
+    expect(output).toContain("Input untracked files: 1");
     expect(output).toContain("Generated untracked files: 1");
+    expect(output).toContain("Failure reasons:");
     expect(output).toContain("generated.txt");
   });
 
@@ -34,7 +38,8 @@ describe("report formatting", () => {
     const output = formatMarkdownReport(baseReport);
     expect(output).toContain("# Cleanroom Run Report");
     expect(output).toContain("Status: **failed**");
+    expect(output).toContain("input-untracked-files");
+    expect(output).toContain("`local.env`");
     expect(output).toContain("`src/index.ts`");
   });
 });
-

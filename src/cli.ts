@@ -5,7 +5,7 @@ import { CleanroomError, assertCleanroom } from "./errors.js";
 import { renderArgv } from "./process.js";
 import { formatDoctor, formatTerminalReport } from "./report.js";
 import { runCleanroom } from "./runner.js";
-import type { CommandSpec, DoctorResult, RunOptions } from "./types.js";
+import type { CheckConfig, CommandSpec, DoctorResult, RunOptions } from "./types.js";
 
 const DEFAULT_TIMEOUT_MS = 120000;
 
@@ -110,12 +110,13 @@ async function runCommand(args: string[]): Promise<void> {
   const separator = args.indexOf("--");
   const beforeSeparator = separator === -1 ? args : args.slice(0, separator);
   const afterSeparator = separator === -1 ? [] : args.slice(separator + 1);
-  const parsed = parseFlags(beforeSeparator, ["--json", "--keep"]);
+  const parsed = parseFlags(beforeSeparator, ["--json", "--keep", "--strict", "--include-untracked", "--allow-modified-tracked"]);
   const checkName = parsed.positionals[0];
   const root = await repoRoot(process.cwd());
   const config = await loadConfig(root, parsed.flags.get("--config"));
   let command: CommandSpec | undefined;
   let timeoutMs = parsed.flags.has("--timeout") ? parseTimeout(parsed.flags.get("--timeout")) : DEFAULT_TIMEOUT_MS;
+  let checkPolicy: Partial<CheckConfig> = {};
 
   if (afterSeparator.length > 0) {
     command = {
@@ -132,9 +133,12 @@ async function runCommand(args: string[]): Promise<void> {
       display: check.command
     };
     timeoutMs = check.timeoutMs ?? timeoutMs;
+    checkPolicy = check;
   }
 
   assertCleanroom(command, "missing command; use `cleanroom-run run -- npm test` or define a named check");
+  const policy = resolvePolicy(checkPolicy, parsed.booleans);
+  assertCleanroom(!(policy.strict && policy.includeUntracked), "`--strict` cannot be combined with `--include-untracked`");
 
   const options: RunOptions = {
     checkName,
@@ -143,7 +147,10 @@ async function runCommand(args: string[]): Promise<void> {
     json: parsed.booleans.has("--json"),
     keep: parsed.booleans.has("--keep"),
     reportDir: parsed.flags.get("--report-dir"),
-    timeoutMs
+    timeoutMs,
+    strict: policy.strict,
+    includeUntracked: policy.includeUntracked,
+    allowModifiedTracked: policy.allowModifiedTracked
   };
 
   const report = await runCleanroom(process.cwd(), options);
@@ -205,11 +212,11 @@ Run repo checks in a clean Git worktree.
 Usage:
   cleanroom-run init [--force]
   cleanroom-run doctor [--json] [--config path]
-  cleanroom-run run [check] [--json] [--keep] [--timeout ms] [--report-dir dir] [-- command...]
+  cleanroom-run run [check] [--strict] [--include-untracked] [--allow-modified-tracked] [--json] [--keep] [--timeout ms] [--report-dir dir] [-- command...]
 
 Examples:
   cleanroom-run init
-  cleanroom-run run -- npm test
+  cleanroom-run run --strict -- npm test
   cleanroom-run run verify
   cleanroom-run run --json -- npm run build
 `);
@@ -219,3 +226,16 @@ export function configExists(path: string): boolean {
   return existsSync(path);
 }
 
+export function resolvePolicy(
+  check: Partial<CheckConfig>,
+  booleans: Set<string>
+): Pick<RunOptions, "strict" | "includeUntracked" | "allowModifiedTracked"> {
+  const requestedStrict = booleans.has("--strict");
+  const requestedIncludeUntracked = booleans.has("--include-untracked");
+
+  return {
+    strict: requestedIncludeUntracked ? false : requestedStrict ? true : (check.strict ?? false),
+    includeUntracked: requestedStrict ? false : requestedIncludeUntracked ? true : (check.includeUntracked ?? false),
+    allowModifiedTracked: booleans.has("--allow-modified-tracked") ? true : (check.allowModifiedTracked ?? false)
+  };
+}

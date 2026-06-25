@@ -13,6 +13,9 @@ export type CommandSpec =
 export interface CheckConfig {
   command: string;
   timeoutMs?: number;
+  strict?: boolean;
+  includeUntracked?: boolean;
+  allowModifiedTracked?: boolean;
 }
 
 export interface CleanroomConfig {
@@ -27,6 +30,9 @@ export interface RunOptions {
   keep: boolean;
   reportDir?: string;
   timeoutMs: number;
+  strict?: boolean;
+  includeUntracked?: boolean;
+  allowModifiedTracked?: boolean;
 }
 
 export interface DoctorResult {
@@ -49,12 +55,13 @@ export interface RunReport {
   signal: NodeJS.Signals | null;
   timedOut: boolean;
   durationMs: number;
+  inputUntrackedFiles: string[];
   generatedUntrackedFiles: string[];
   modifiedTrackedFiles: string[];
+  failureReasons: string[];
   stdoutTail: string;
   stderrTail: string;
   markdownReportPath?: string;
   startedAt: string;
   completedAt: string;
 }
-

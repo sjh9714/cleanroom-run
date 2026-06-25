@@ -20,12 +20,18 @@ export function formatTerminalReport(report: RunReport): string {
     `Command: ${report.command}`,
     `Exit: ${report.exitCode ?? "signal"}${report.signal ? ` (${report.signal})` : ""}`,
     `Duration: ${formatDuration(report.durationMs)}`,
+    `Input untracked files: ${report.inputUntrackedFiles.length}`,
     `Generated untracked files: ${report.generatedUntrackedFiles.length}`,
-    `Modified tracked files: ${report.modifiedTrackedFiles.length}`
+    `Modified tracked files: ${report.modifiedTrackedFiles.length}`,
+    `Failure reasons: ${report.failureReasons.length === 0 ? "(none)" : report.failureReasons.join(", ")}`
   ];
 
   if (report.markdownReportPath) {
     lines.push(`Report: ${report.markdownReportPath}`);
+  }
+
+  if (report.inputUntrackedFiles.length > 0) {
+    lines.push("", "Input untracked files:", ...report.inputUntrackedFiles.map((file) => `  ? ${file}`));
   }
 
   if (report.generatedUntrackedFiles.length > 0) {
@@ -75,8 +81,11 @@ export function formatMarkdownReport(report: RunReport): string {
     report.generatedUntrackedFiles.length === 0
       ? "None"
       : report.generatedUntrackedFiles.map((file) => `- \`${file}\``).join("\n");
+  const inputUntracked =
+    report.inputUntrackedFiles.length === 0 ? "None" : report.inputUntrackedFiles.map((file) => `- \`${file}\``).join("\n");
   const modified =
     report.modifiedTrackedFiles.length === 0 ? "None" : report.modifiedTrackedFiles.map((file) => `- \`${file}\``).join("\n");
+  const failureReasons = report.failureReasons.length === 0 ? "None" : report.failureReasons.map((reason) => `- \`${reason}\``).join("\n");
 
   return `# Cleanroom Run Report
 
@@ -92,6 +101,14 @@ Status: **${report.ok ? "passed" : "failed"}**
 | Started | ${report.startedAt} |
 | Completed | ${report.completedAt} |
 | Worktree kept | ${report.keptWorktree ? "yes" : "no"} |
+
+## Failure Reasons
+
+${failureReasons}
+
+## Input Untracked Files
+
+${inputUntracked}
 
 ## Generated Untracked Files
 
