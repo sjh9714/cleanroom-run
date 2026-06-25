@@ -6,6 +6,7 @@ Status: v0.1.1 released on GitHub; npm publication remains blocked by authentica
 
 Remote repository: https://github.com/sjh9714/cleanroom-run
 Latest GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1
+Public README GitHub install commands are pinned to `github:sjh9714/cleanroom-run#v0.1.1`.
 
 ## Launch Blockers
 
@@ -90,6 +91,11 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
   - `npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run --version` exited 0 and printed `0.1.1`.
   - GitHub Actions run `28145426387` completed with conclusion `success` for commit `0aec0be`.
   - GitHub release `v0.1.1` is published and not a draft/prerelease: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1
+- Launch-copy pinning verification:
+  - README GitHub install commands now use `github:sjh9714/cleanroom-run#v0.1.1` so external launch readers install the release tag instead of `main`.
+  - `rg "github:sjh9714/cleanroom-run(?!#v0\\.1\\.1)" README.md -P` returned no active unpinned README commands.
+  - `npm exec --yes --package github:sjh9714/cleanroom-run#v0.1.1 -- cleanroom-run --version` exited 0 and printed `0.1.1`.
+  - `npm run verify` exited 0 with 19 tests passing.
 
 ## Launch Surface
 

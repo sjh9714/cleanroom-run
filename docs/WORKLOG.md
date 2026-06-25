@@ -90,3 +90,6 @@
 - Confirmed remote CI for `0aec0be` succeeded: https://github.com/sjh9714/cleanroom-run/actions/runs/28145426387
 - Verified GitHub install path prints `0.1.1`.
 - Created GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.1
+- Pinned public README GitHub install commands to `v0.1.1`.
+- Verified pinned GitHub install path prints `0.1.1`.
+- `npm run verify` exited 0 with 19 tests passing after the docs-only launch-copy hardening.

@@ -8,7 +8,7 @@
 Cleanroom Run checks agent-generated changes from a temporary Git worktree before CI catches dirty local state.
 
 ```bash
-npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
+npm exec --yes --package github:sjh9714/cleanroom-run#v0.1.1 -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
 ```
 
 It creates a temporary Git worktree from `HEAD`, applies your intended tracked changes, runs your command, and reports files that were generated or modified unexpectedly.
@@ -59,7 +59,7 @@ Use it before you trust:
 Run from any Git repo with at least one commit:
 
 ```bash
-npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
+npm exec --yes --package github:sjh9714/cleanroom-run#v0.1.1 -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
 ```
 
 When the npm package is published, the shorter form is:
@@ -71,7 +71,7 @@ npx cleanroom-run run --strict -- sh -lc "npm ci && npm test"
 For a faster command that does not need dependency install:
 
 ```bash
-npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run run --strict -- npm test
+npm exec --yes --package github:sjh9714/cleanroom-run#v0.1.1 -- cleanroom-run run --strict -- npm test
 ```
 
 Cleanroom Run writes Markdown reports to your OS temp directory by default and exits non-zero when:
@@ -87,7 +87,7 @@ Cleanroom Run writes Markdown reports to your OS temp directory by default and e
 From this GitHub release candidate:
 
 ```bash
-npm install --save-dev github:sjh9714/cleanroom-run
+npm install --save-dev github:sjh9714/cleanroom-run#v0.1.1
 ```
 
 After npm publication:
@@ -182,7 +182,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm exec --yes --package github:sjh9714/cleanroom-run -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
+      - run: npm exec --yes --package github:sjh9714/cleanroom-run#v0.1.1 -- cleanroom-run run --strict -- sh -lc "npm ci && npm test"
 ```
 
 ## Input Modes
