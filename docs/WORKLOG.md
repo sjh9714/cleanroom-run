@@ -57,3 +57,20 @@
   - `npm run typecheck:test` exited 0.
   - `npm test` exited 0 with 17 tests passing.
   - `npm run lint` exited 0.
+- Ran full launch hardening verification:
+  - `npm run verify` exited 0.
+  - `npm pack --dry-run` exited 0.
+- Pushed launch hardening commit `1356a05`.
+- Configured GitHub repository description and launch topics.
+- Created GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.0
+- Created launch issues:
+  - #1 Roadmap: GitHub Action wrapper
+  - #2 Roadmap: v0.2 policy mode
+  - #3 Feature: add --max-output-bytes
+  - #4 Roadmap: SARIF and JUnit reports
+  - #5 Docs: add pre-push hook recipe
+  - #6 Docs: add pnpm examples
+- Confirmed remote CI for `1356a05` succeeded: https://github.com/sjh9714/cleanroom-run/actions/runs/28144777652
+- npm publish remains blocked by npm auth:
+  - `npm whoami` returned `E401 Unauthorized`.
+  - Blocked command: `npm publish --access public`.

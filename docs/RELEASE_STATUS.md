@@ -5,14 +5,23 @@
 Status: v0.1 release candidate ready.
 
 Remote repository: https://github.com/sjh9714/cleanroom-run
+GitHub release: https://github.com/sjh9714/cleanroom-run/releases/tag/v0.1.0
 
 ## Launch Blockers
 
-None known.
+None known for GitHub public launch.
+
+npm publication is blocked by authentication, not by package readiness:
+
+```bash
+npm publish --access public
+```
+
+Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
 
 ## Non-Blocking Follow-Ups
 
-- npm package publication has not been performed. The package is ready for npm, and the README includes a working GitHub install command for the release candidate.
+- npm package publication has not been performed because npm auth is unavailable. The package is ready for npm, and the README includes a working GitHub install command for the release candidate.
 - Future report formats such as JUnit and SARIF are documented as roadmap items, not v0.1 requirements.
 - Default Markdown reports now write to the OS temp directory so `cleanroom-run run` does not modify the user's repo unless `--report-dir` is explicit.
 - npm auth was previously unavailable (`npm whoami` returned E401). The final launch pass will retry and either publish or record the blocked publish command.
@@ -56,6 +65,12 @@ None known.
     - build passed
     - smoke test passed
   - `npm pack --dry-run` exited 0 and produced `cleanroom-run-0.1.0.tgz` metadata with 40 packaged files.
+- Remote launch hardening verification:
+  - GitHub Actions run `28144777652` completed with conclusion `success` for commit `1356a05`.
+  - GitHub release `v0.1.0` is published and not a draft/prerelease.
+  - Repository description is `Catch dirty-local-state bugs in AI-generated code before CI does.`
+  - Repository topics include `ai-agents`, `coding-agents`, `codex`, `ci`, `testing`, `git`, `worktree`, `developer-tools`, `cli`, `npm`, `typescript`, `cleanroom`, `pre-ci`, `automation`, and `codegen`.
+  - Launch issues #1 through #6 are open.
 
 ## Launch Surface
 
@@ -74,3 +89,7 @@ None known.
 - Package metadata: complete.
 - Changelog/release notes: complete.
 - Public GitHub repository: complete and pushed.
+- GitHub topics/description: complete.
+- GitHub release: complete.
+- Launch issues: complete.
+- npm publish: blocked by authentication; exact blocked command recorded above.
