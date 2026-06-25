@@ -67,6 +67,7 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
   - `npm pack --dry-run` exited 0 and produced `cleanroom-run-0.1.0.tgz` metadata with 40 packaged files.
 - Remote launch hardening verification:
   - GitHub Actions run `28144777652` completed with conclusion `success` for commit `1356a05`.
+  - GitHub Actions run `28144824993` completed with conclusion `success` for commit `20b29c7`.
   - GitHub release `v0.1.0` is published and not a draft/prerelease.
   - Repository description is `Catch dirty-local-state bugs in AI-generated code before CI does.`
   - Repository topics include `ai-agents`, `coding-agents`, `codex`, `ci`, `testing`, `git`, `worktree`, `developer-tools`, `cli`, `npm`, `typescript`, `cleanroom`, `pre-ci`, `automation`, and `codegen`.
@@ -84,7 +85,7 @@ Current blocker evidence: `npm whoami` returned `E401 Unauthorized`.
 - Integration/smoke test: complete.
 - Lint/typecheck/build/test scripts: complete.
 - CI workflow: complete and passing remotely.
-- CI matrix: updated to Ubuntu/macOS and Node 20/22; remote verification pending after push.
+- CI matrix: updated to Ubuntu/macOS and Node 20/22; passing remotely.
 - License: MIT.
 - Package metadata: complete.
 - Changelog/release notes: complete.
